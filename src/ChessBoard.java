@@ -40,7 +40,7 @@ public class ChessBoard {
 	        return r >= 0 && r < size && c >= 0 && c < size;
 	    }
 	
-	  
+	 
 	  public void KnightsTour() {
 		  int step=1;
 		  ChessSpot curr = points[startCol][startRow];
@@ -48,7 +48,7 @@ public class ChessBoard {
 		  ChessSpot prev;
 		  while (step<64) {
 			  prev= curr;
-			  curr = curr.nextStep();
+			  curr = curr.randomNextStep();
 			  
 			  if (curr==null) {
 				  curr=prev.prev;
@@ -65,13 +65,19 @@ public class ChessBoard {
 
 	  }
 	  
+		@Override
+		public String toString() { // prints ChessBoard by step values of its ChessSpots
+			StringBuilder sb = new StringBuilder();
+		    for (int r = 0; r < size; r++) {
+		        for (int c = 0; c < size; c++) {
+		            sb.append(String.format("%2s ", points[r][c])); 
+		        }
+		        sb.append("\n");
+		    }
+		    return sb.toString();		
+		    }
+	  
 
 	  
-	  
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		
-		
-		}
+
 }
