@@ -3,13 +3,13 @@ import java.util.*;
 public class ChessSpot {
 
 	
-	protected final int row; // position usage
-	protected final int col; // position usage
-	protected boolean vis; // has knight passed this chessSpot in route
-	protected ChessSpot prev; // previous chessSpot on knights route
-	protected int step; // order of tour usage
-	  final List<ChessSpot> allNeighbors = new ArrayList<>();
-	    final List<ChessSpot> remNeighbors = new ArrayList<>();
+	private final int row; // position usage
+	private final int col; // position usage
+	private boolean vis; // has knight passed this chessSpot in route
+	private ChessSpot prev; // previous chessSpot on knights route
+	private int step; // order of tour usage
+	private final Set<ChessSpot> allNeighbors = new HashSet<>();
+	private final Set<ChessSpot> remNeighbors = new HashSet<>();
 	
 	public ChessSpot(int row, int col) {
 		super();
@@ -20,14 +20,21 @@ public class ChessSpot {
 		this.prev=null;
 	}
 	
-	  void resetDynamicNeighbors() { // used when stepping back from a deadEnd
+	public void resetSpot() {
+		this.vis=false;
+		this.step=-1;
+		this.prev=null;
+		this.remNeighbors.addAll(allNeighbors);
+	}
+	
+	public void resetDynamicNeighbors() { // used when stepping back from a deadEnd
 		  remNeighbors.clear();
 	        for (ChessSpot nb : allNeighbors) {
 	            if (!nb.vis) remNeighbors.add(nb);
 	        }
 	    }
 	
-	  public int minNeighborCnt() { //helper function for generalNextStep
+	public int minNeighborCnt() { //helper function for generalNextStep
 		  int min =9;
 		  for (ChessSpot cs : this.remNeighbors) {
 			  if(cs.remNeighbors.size()<min) {
@@ -37,7 +44,7 @@ public class ChessSpot {
 		  return min;
 	  }
 	  
-	  public boolean earlyDetection() {
+	 public boolean earlyDetection() {
 		  int cnt=0;
 		  for (ChessSpot cs : this.remNeighbors) {
 			  if(cs.remNeighbors.size()==0) {
@@ -47,7 +54,7 @@ public class ChessSpot {
 		  return cnt>1;
 	  }
 	  
-	  public int generalNextStep() { // Helper function for step search functions that uses early detection logics
+	 public int generalNextStep() { // Helper function for step search functions that uses early detection logics
 		  int min =minNeighborCnt();
 		  if(min==9) {
 			  return -1;
@@ -110,7 +117,7 @@ public class ChessSpot {
 		  
 	  }
 	  
-	  public ChessSpot DetnextStepB() { // Deterministic next step search without early detection logics
+	  public ChessSpot detNextStepB() { // Deterministic next step search without early detection logics
 		  ChessSpot minCS=null; int min=9;
 		  for (ChessSpot cs : this.remNeighbors) {
 			  if(cs.remNeighbors.size()<min) {
@@ -142,6 +149,10 @@ public class ChessSpot {
 		this.prev.remNeighbors.remove(this);
 		this.prev=null;
 	}
+
+	public ChessSpot getPrev() {
+		return prev;
+	}
 	
 	public int getRow() {
 		return row;
@@ -149,6 +160,10 @@ public class ChessSpot {
 
 	public int getCol() {
 		return col;
+	}
+	
+	public void addNeighbor(ChessSpot CS) {
+		this.allNeighbors.add(CS);
 	}
 
 	@Override
@@ -160,5 +175,8 @@ public class ChessSpot {
 			return "["+"0"+Integer.toString(step)+"]" ;
 		}
 			}
+
+
 		
+
 }
